@@ -16,9 +16,11 @@ import {
   FlatList,
   View,
   TouchableOpacity,
-  Platform,
-  Alert,
   Modal,
+  Image,
+  TextInput,
+  Button,
+  Alert,
 } from 'react-native';
 import * as api from './api';
 
@@ -31,6 +33,8 @@ const App: React.FC = () => {
   });
 
   const [modalVisible, setModalVisible] = useState<boolean>(false);
+
+  const [value, onChangeText] = React.useState<string>('');
 
   useEffect(() => {
     api
@@ -70,7 +74,22 @@ const App: React.FC = () => {
             <View
               style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
               <Text>Add announcements!</Text>
-
+              <TextInput
+                style={{
+                  height: 40,
+                  width: 340,
+                  borderColor: 'gray',
+                  borderWidth: 1,
+                  paddingHorizontal: 16,
+                }}
+                placeholder="Add title"
+                onChangeText={text => onChangeText(text)}
+                value={value}
+              />
+              <Button
+                title="Add announcement"
+                onPress={() => Alert.alert('New announcement added!')}></Button>
+              <Text>{value}</Text>
               <TouchableOpacity onPress={() => setModalVisible(!modalVisible)}>
                 <Text>Hide Modal</Text>
               </TouchableOpacity>
@@ -82,7 +101,7 @@ const App: React.FC = () => {
             padding: 5,
             position: 'absolute',
             right: 16,
-            bottom: Platform.OS === 'ios' ? 0 : 16,
+            bottom: 16,
             width: 64,
             height: 64,
             borderRadius: 64 / 2,
@@ -93,12 +112,7 @@ const App: React.FC = () => {
           <TouchableOpacity
             onPress={() => setModalVisible(true)}
             hitSlop={{top: 44, bottom: 44, left: 44, right: 44}}>
-            <Text
-              style={{
-                color: 'white',
-              }}>
-              Add
-            </Text>
+            <Image source={require('./assets/images/plus.png')} />
           </TouchableOpacity>
         </View>
       </SafeAreaView>
