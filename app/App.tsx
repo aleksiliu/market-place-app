@@ -11,20 +11,26 @@
 import React, {useState, useEffect} from 'react';
 import {
   Text,
-  View,
   ActivityIndicator,
   SafeAreaView,
   FlatList,
-  StyleSheet,
+  View,
+  TouchableOpacity,
+  Platform,
+  Alert,
+  Modal,
 } from 'react-native';
 import * as api from './api';
 
 import {Announcement, Status} from './types';
+import Card from './components/Card';
 
 const App: React.FC = () => {
   const [announcements, setAnnouncements] = useState<Status<Announcement[]>>({
     status: 'loading',
   });
+
+  const [modalVisible, setModalVisible] = useState<boolean>(false);
 
   useEffect(() => {
     api
@@ -38,14 +44,6 @@ const App: React.FC = () => {
       });
   }, []);
 
-  const Item = ({headline, description, price}: Announcement) => (
-    <View style={styles.item}>
-      <Text style={styles.title}>{headline}</Text>
-      <Text>{description}</Text>
-      <Text>{price}</Text>
-    </View>
-  );
-
   return (
     <>
       <SafeAreaView>
@@ -55,7 +53,7 @@ const App: React.FC = () => {
           <FlatList
             data={announcements.data}
             renderItem={({item}) => (
-              <Item
+              <Card
                 headline={item.headline}
                 description={item.description}
                 price={item.price}
@@ -64,21 +62,48 @@ const App: React.FC = () => {
             keyExtractor={item => item.headline}
           />
         )}
+        <View>
+          <Modal
+            animationType="slide"
+            transparent={false}
+            visible={modalVisible}>
+            <View
+              style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
+              <Text>Add announcements!</Text>
+
+              <TouchableOpacity onPress={() => setModalVisible(!modalVisible)}>
+                <Text>Hide Modal</Text>
+              </TouchableOpacity>
+            </View>
+          </Modal>
+        </View>
+        <View
+          style={{
+            padding: 5,
+            position: 'absolute',
+            right: 16,
+            bottom: Platform.OS === 'ios' ? 0 : 16,
+            width: 64,
+            height: 64,
+            borderRadius: 64 / 2,
+            backgroundColor: 'green',
+            alignItems: 'center',
+            justifyContent: 'center',
+          }}>
+          <TouchableOpacity
+            onPress={() => setModalVisible(true)}
+            hitSlop={{top: 44, bottom: 44, left: 44, right: 44}}>
+            <Text
+              style={{
+                color: 'white',
+              }}>
+              Add
+            </Text>
+          </TouchableOpacity>
+        </View>
       </SafeAreaView>
     </>
   );
 };
 
-const styles = StyleSheet.create({
-  item: {
-    backgroundColor: '#f9c2ff',
-    padding: 20,
-    marginVertical: 8,
-    marginHorizontal: 16,
-    borderRadius: 16,
-  },
-  title: {
-    fontSize: 24,
-  },
-});
 export default App;
