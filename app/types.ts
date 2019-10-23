@@ -9,13 +9,16 @@ export type Announcement = {
 
 type StatusLoading = {
   status: 'loading';
+  data: [];
 };
+
 type StatusLoaded<T> = {
   status: 'success';
   data: T;
 };
 type StatusError = {
   status: 'error';
+  data: [];
   error: Error;
 };
 
