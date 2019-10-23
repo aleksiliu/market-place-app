@@ -7,7 +7,7 @@ const Card = ({headline, description, price}: Announcement) => (
   <View style={styles.card}>
     <Text style={styles.title}>{headline}</Text>
     <Text>{description}</Text>
-    <Text>{price}</Text>
+    <Text>{price}€</Text>
   </View>
 );
 

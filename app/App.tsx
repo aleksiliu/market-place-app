@@ -21,6 +21,7 @@ import {
   TextInput,
   Button,
   Alert,
+  StyleSheet,
 } from 'react-native';
 import * as api from './api';
 
@@ -34,7 +35,9 @@ const App: React.FC = () => {
 
   const [modalVisible, setModalVisible] = useState<boolean>(false);
 
-  const [value, onChangeText] = React.useState<string>('');
+  const [headline, setHeadline] = React.useState<string>('');
+  const [description, setDescription] = React.useState<string>('');
+  const [price, setPrice] = React.useState<number>(0);
 
   useEffect(() => {
     api
@@ -46,7 +49,42 @@ const App: React.FC = () => {
         setAnnouncements({status: 'error', error});
         console.log(error);
       });
-  }, []);
+  }, [modalVisible]);
+
+  const onSubmit = () => {
+    const values = {
+      headline,
+      description,
+      price,
+    };
+
+    if (headline && description && price) {
+      api
+        .postAnnouncement(values)
+        .then(response => {
+          Alert.alert(JSON.stringify(response));
+          setModalVisible(false);
+        })
+        .catch(error => {
+          Alert.alert(JSON.stringify(error));
+        });
+    } else {
+      Alert.alert('Fill all the details first!');
+    }
+  };
+
+  const styles = StyleSheet.create({
+    input: {
+      height: 40,
+      width: 340,
+      borderColor: 'gray',
+      borderWidth: 1,
+      paddingHorizontal: 16,
+    },
+    red: {
+      color: 'red',
+    },
+  });
 
   return (
     <>
@@ -63,56 +101,78 @@ const App: React.FC = () => {
                 price={item.price}
               />
             )}
-            keyExtractor={item => item.headline}
+            keyExtractor={(item: any) => item.announcementId}
           />
         )}
-        <View>
-          <Modal
-            animationType="slide"
-            transparent={false}
-            visible={modalVisible}>
-            <View
-              style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
-              <Text>Add announcements!</Text>
-              <TextInput
-                style={{
-                  height: 40,
-                  width: 340,
-                  borderColor: 'gray',
-                  borderWidth: 1,
-                  paddingHorizontal: 16,
-                }}
-                placeholder="Add title"
-                onChangeText={text => onChangeText(text)}
-                value={value}
+
+        <Modal animationType="slide" transparent={false} visible={modalVisible}>
+          <View
+            style={{
+              position: 'absolute',
+              top: 16,
+              left: 16,
+              backgroundColor: 'red',
+              borderRadius: 64 / 2,
+              zIndex: 1,
+            }}>
+            <TouchableOpacity
+              onPress={() => setModalVisible(!modalVisible)}
+              style={{
+                width: 64,
+                height: 64,
+                alignItems: 'center',
+                justifyContent: 'center',
+              }}>
+              <Image
+                source={require('./assets/images/cross.png')}
+                style={{transform: [{rotate: '45deg'}]}}
               />
-              <Button
-                title="Add announcement"
-                onPress={() => Alert.alert('New announcement added!')}></Button>
-              <Text>{value}</Text>
-              <TouchableOpacity onPress={() => setModalVisible(!modalVisible)}>
-                <Text>Hide Modal</Text>
-              </TouchableOpacity>
-            </View>
-          </Modal>
-        </View>
+            </TouchableOpacity>
+          </View>
+          <View
+            style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
+            <TextInput
+              style={styles.input}
+              placeholder="Add title"
+              onChangeText={text => setHeadline(text)}
+              value={headline}
+            />
+            <TextInput
+              style={styles.input}
+              placeholder="Add description"
+              onChangeText={text => setDescription(text)}
+              value={description}
+            />
+            <TextInput
+              style={styles.input}
+              keyboardType="numeric"
+              placeholder="Price"
+              onChangeText={(text: any) => setPrice(text)}
+              value={price}
+            />
+
+            <Button title="Add announcement" onPress={onSubmit}></Button>
+          </View>
+        </Modal>
+
         <View
           style={{
-            padding: 5,
             position: 'absolute',
             right: 16,
             bottom: 16,
-            width: 64,
-            height: 64,
-            borderRadius: 64 / 2,
             backgroundColor: 'green',
-            alignItems: 'center',
-            justifyContent: 'center',
+            borderRadius: 64 / 2,
+            zIndex: 1,
           }}>
           <TouchableOpacity
             onPress={() => setModalVisible(true)}
-            hitSlop={{top: 44, bottom: 44, left: 44, right: 44}}>
-            <Image source={require('./assets/images/plus.png')} />
+            style={{
+              width: 64,
+              height: 64,
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}>
+            <Image source={require('./assets/images/cross.png')} />
           </TouchableOpacity>
         </View>
       </SafeAreaView>
