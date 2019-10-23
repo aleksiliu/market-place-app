@@ -165,9 +165,8 @@ const App: React.FC = () => {
             keyboardType="numeric"
             placeholder="Price"
             onChangeText={text => setPrice(Number(text))}
-            value={price}
+            value={price.toString()}
           />
-
           <Button title="Add announcement" onPress={onSubmit}></Button>
         </View>
       </Modal>
