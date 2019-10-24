@@ -22,6 +22,9 @@ import {
   Button,
   Alert,
   StyleSheet,
+  StatusBar,
+  TouchableWithoutFeedback,
+  Keyboard,
 } from 'react-native';
 import * as api from './api';
 
@@ -77,9 +80,10 @@ const App: React.FC = () => {
     input: {
       height: 40,
       width: 340,
-      borderColor: 'gray',
-      borderWidth: 1,
+      color: 'white',
       paddingHorizontal: 16,
+      backgroundColor: '#3A3C3D',
+      marginBottom: 16,
     },
     circle: {
       width: 64,
@@ -91,6 +95,7 @@ const App: React.FC = () => {
 
   return (
     <>
+      <StatusBar barStyle="light-content" />
       {announcements.data.length === 0 && (
         <View
           style={{
@@ -113,7 +118,7 @@ const App: React.FC = () => {
       )}
       {announcements.status === 'loading' && <ActivityIndicator />}
       {announcements.status === 'success' && (
-        <SafeAreaView style={{flex: 1, backgroundColor: 'white'}}>
+        <SafeAreaView style={{flex: 1, backgroundColor: '#212325'}}>
           <FlatList
             data={announcements.data}
             renderItem={({item}) => (
@@ -128,46 +133,66 @@ const App: React.FC = () => {
         </SafeAreaView>
       )}
 
-      <Modal animationType="slide" transparent={false} visible={modalVisible}>
+      <Modal
+        onRequestClose={() => console.log('on dismiss')}
+        onDismiss={() => console.log('on dismiss')}
+        presentationStyle="pageSheet"
+        animationType="slide"
+        transparent={false}
+        visible={modalVisible}>
         <View
           style={{
-            position: 'absolute',
-            top: 16,
-            left: 16,
-            backgroundColor: 'red',
-            borderRadius: 64 / 2,
-            zIndex: 1,
+            flex: 1,
+            backgroundColor: '#212325',
           }}>
-          <TouchableOpacity
-            onPress={() => setModalVisible(!modalVisible)}
-            style={styles.circle}>
-            <Image
-              source={require('./assets/images/cross.png')}
-              style={{transform: [{rotate: '45deg'}]}}
-            />
-          </TouchableOpacity>
-        </View>
-        <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
-          <TextInput
-            style={styles.input}
-            placeholder="Add title"
-            onChangeText={text => setHeadline(text)}
-            value={headline}
-          />
-          <TextInput
-            style={styles.input}
-            placeholder="Add description"
-            onChangeText={text => setDescription(text)}
-            value={description}
-          />
-          <TextInput
-            style={styles.input}
-            keyboardType="numeric"
-            placeholder="Price"
-            onChangeText={text => setPrice(Number(text))}
-            value={price.toString()}
-          />
-          <Button title="Add announcement" onPress={onSubmit}></Button>
+          <View
+            style={{
+              position: 'absolute',
+              top: 16,
+              left: 16,
+              backgroundColor: '#191A1B',
+              borderRadius: 64 / 2,
+              zIndex: 1,
+            }}>
+            <TouchableOpacity
+              onPress={() => setModalVisible(!modalVisible)}
+              style={styles.circle}>
+              <Image
+                source={require('./assets/images/cross.png')}
+                style={{transform: [{rotate: '45deg'}]}}
+              />
+            </TouchableOpacity>
+          </View>
+          <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+            <View
+              style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
+              <TextInput
+                style={styles.input}
+                placeholder="Add title"
+                placeholderTextColor="#939597"
+                onChangeText={text => setHeadline(text)}
+                value={headline}
+              />
+              <TextInput
+                style={styles.input}
+                placeholder="Add description"
+                placeholderTextColor="#939597"
+                onChangeText={text => setDescription(text)}
+                value={description}
+              />
+              <TextInput
+                style={styles.input}
+                keyboardType="numeric"
+                placeholder="Price"
+                onChangeText={text => setPrice(Number(text))}
+                value={price.toString()}
+              />
+              <Button
+                title="Add announcement"
+                color="#96CEA7"
+                onPress={onSubmit}></Button>
+            </View>
+          </TouchableWithoutFeedback>
         </View>
       </Modal>
 
@@ -176,7 +201,7 @@ const App: React.FC = () => {
           position: 'absolute',
           right: 16,
           bottom: 16,
-          backgroundColor: 'green',
+          backgroundColor: '#96CEA7',
           borderRadius: 64 / 2,
           zIndex: 1,
         }}>
