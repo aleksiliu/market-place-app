@@ -34,7 +34,6 @@ import Card from './components/Card';
 const App: React.FC = () => {
   const [announcements, setAnnouncements] = useState<Status<Announcement[]>>({
     status: 'loading',
-    data: [],
   });
 
   const [modalVisible, setModalVisible] = useState<boolean>(false);
@@ -44,15 +43,19 @@ const App: React.FC = () => {
   const [price, setPrice] = React.useState<number>(0);
 
   useEffect(() => {
+    fetchAnnouncements();
+  }, []);
+
+  const fetchAnnouncements = () => {
     api
       .getAnnouncements()
       .then(response => {
         setAnnouncements({status: 'success', data: response});
       })
       .catch(error => {
-        setAnnouncements({status: 'error', data: [], error});
+        setAnnouncements({status: 'error', error});
       });
-  }, [modalVisible]);
+  };
 
   const onSubmit = () => {
     const values = {
@@ -65,7 +68,7 @@ const App: React.FC = () => {
       api
         .postAnnouncement(values)
         .then(response => {
-          Alert.alert(JSON.stringify(response));
+          fetchAnnouncements();
           setModalVisible(false);
         })
         .catch(error => {
@@ -76,36 +79,10 @@ const App: React.FC = () => {
     }
   };
 
-  const styles = StyleSheet.create({
-    input: {
-      height: 40,
-      width: 340,
-      color: 'white',
-      paddingHorizontal: 16,
-      backgroundColor: '#3A3C3D',
-      marginBottom: 16,
-    },
-    circle: {
-      width: 64,
-      height: 64,
-      alignItems: 'center',
-      justifyContent: 'center',
-    },
-  });
-
   return (
     <>
       <StatusBar barStyle="light-content" />
-      {announcements.data.length === 0 && (
-        <View
-          style={{
-            flex: 1,
-            alignItems: 'center',
-            justifyContent: 'center',
-          }}>
-          <Text>No results found</Text>
-        </View>
-      )}
+
       {announcements.status === 'error' && (
         <View
           style={{
@@ -214,5 +191,22 @@ const App: React.FC = () => {
     </>
   );
 };
+
+const styles = StyleSheet.create({
+  input: {
+    height: 40,
+    width: 340,
+    color: 'white',
+    paddingHorizontal: 16,
+    backgroundColor: '#3A3C3D',
+    marginBottom: 16,
+  },
+  circle: {
+    width: 64,
+    height: 64,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+});
 
 export default App;

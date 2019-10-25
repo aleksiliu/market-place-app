@@ -5,9 +5,9 @@ import {Announcement} from '../types';
 
 const Card = ({headline, description, price}: Announcement) => (
   <View style={styles.card}>
-    <Text style={styles.title}>{headline}</Text>
-    <Text style={{color: 'white', opacity: 0.7}}>{description}</Text>
-    <Text style={{color: 'white'}}>{price}€</Text>
+    <Text style={styles.headlineTitle}>{headline}</Text>
+    <Text style={styles.paragraph}>{description}</Text>
+    <Text style={styles.price}>{price}€</Text>
   </View>
 );
 
@@ -19,8 +19,19 @@ const styles = StyleSheet.create({
     marginHorizontal: 16,
     borderRadius: 16,
   },
-  title: {
+  headlineTitle: {
     fontSize: 24,
+    color: 'white',
+    marginBottom: 4,
+  },
+  paragraph: {
+    fontSize: 18,
+    color: 'white',
+    opacity: 0.7,
+    marginBottom: 8,
+  },
+  price: {
+    fontSize: 18,
     color: 'white',
   },
 });
