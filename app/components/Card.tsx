@@ -14,7 +14,7 @@ const Card = ({headline, description, price}: Announcement) => (
 const styles = StyleSheet.create({
   card: {
     backgroundColor: '#3A3C3D',
-    padding: 20,
+    padding: 24,
     marginVertical: 8,
     marginHorizontal: 16,
     borderRadius: 16,

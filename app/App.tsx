@@ -38,9 +38,11 @@ const App: React.FC = () => {
 
   const [modalVisible, setModalVisible] = useState<boolean>(false);
 
-  const [headline, setHeadline] = React.useState<string>('');
-  const [description, setDescription] = React.useState<string>('');
-  const [price, setPrice] = React.useState<number>(0);
+  const [form, setForm] = React.useState<Announcement>({
+    headline: '',
+    description: '',
+    price: 0,
+  });
 
   useEffect(() => {
     fetchAnnouncements();
@@ -58,15 +60,9 @@ const App: React.FC = () => {
   };
 
   const onSubmit = () => {
-    const values = {
-      headline,
-      description,
-      price,
-    };
-
-    if (headline && description && price) {
+    if (form.headline && form.description && form.price) {
       api
-        .postAnnouncement(values)
+        .postAnnouncement(form)
         .then(response => {
           fetchAnnouncements();
           setModalVisible(false);
@@ -82,20 +78,20 @@ const App: React.FC = () => {
   return (
     <>
       <StatusBar barStyle="light-content" />
-
-      {announcements.status === 'error' && (
-        <View
-          style={{
-            flex: 1,
-            alignItems: 'center',
-            justifyContent: 'center',
-          }}>
-          <Text>Network error!</Text>
-        </View>
-      )}
-      {announcements.status === 'loading' && <ActivityIndicator />}
+      <View
+        style={{
+          flex: 1,
+          alignItems: 'center',
+          justifyContent: 'center',
+          backgroundColor: '#212325',
+        }}>
+        {announcements.status === 'error' && (
+          <Text style={{color: '#FFF', fontSize: 18}}>Network error :(</Text>
+        )}
+        {announcements.status === 'loading' && <ActivityIndicator />}
+      </View>
       {announcements.status === 'success' && (
-        <SafeAreaView style={{flex: 1, backgroundColor: '#212325'}}>
+        <SafeAreaView style={{backgroundColor: '#212325'}}>
           <FlatList
             data={announcements.data}
             renderItem={({item}) => (
@@ -147,22 +143,22 @@ const App: React.FC = () => {
                 style={styles.input}
                 placeholder="Add title"
                 placeholderTextColor="#939597"
-                onChangeText={text => setHeadline(text)}
-                value={headline}
+                onChangeText={text => setForm({...form, headline: text})}
+                value={form.headline}
               />
               <TextInput
                 style={styles.input}
                 placeholder="Add description"
                 placeholderTextColor="#939597"
-                onChangeText={text => setDescription(text)}
-                value={description}
+                onChangeText={text => setForm({...form, description: text})}
+                value={form.description}
               />
               <TextInput
                 style={styles.input}
                 keyboardType="numeric"
                 placeholder="Price"
-                onChangeText={text => setPrice(Number(text))}
-                value={price.toString()}
+                onChangeText={text => setForm({...form, price: Number(text)})}
+                value={form.price.toString()}
               />
               <Button
                 title="Add announcement"
