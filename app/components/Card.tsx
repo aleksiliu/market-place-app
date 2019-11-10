@@ -1,14 +1,34 @@
 import React from 'react';
-import {Text, View, StyleSheet} from 'react-native';
+import {Text, View, StyleSheet, TouchableOpacity} from 'react-native';
 
-import {Announcement} from '../types';
+import {NavigationInjectedProps, withNavigation} from 'react-navigation';
 
-const Card = ({headline, description, price}: Announcement) => (
-  <View style={styles.card}>
-    <Text style={styles.headlineTitle}>{headline}</Text>
-    <Text style={styles.paragraph}>{description}</Text>
-    <Text style={styles.price}>{price}€</Text>
-  </View>
+type OwnProps = {
+  headline: string;
+  description: string;
+  price: number;
+  announcementId?: string;
+};
+
+const Card = ({
+  headline,
+  description,
+  price,
+  navigation,
+  announcementId,
+}: OwnProps & NavigationInjectedProps) => (
+  <TouchableOpacity
+    onPress={() =>
+      navigation.navigate('Details', {
+        announcementId,
+      })
+    }>
+    <View style={styles.card}>
+      <Text style={styles.headlineTitle}>{headline}</Text>
+      <Text style={styles.paragraph}>{description}</Text>
+      <Text style={styles.price}>{price}€</Text>
+    </View>
+  </TouchableOpacity>
 );
 
 const styles = StyleSheet.create({
@@ -36,4 +56,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Card;
+export default withNavigation(Card);
