@@ -1,10 +1,13 @@
 import React, {useState, useEffect} from 'react';
 import {Text, StyleSheet, View} from 'react-native';
 
-import {NavigationStackProp} from 'react-navigation-stack';
+import {
+  NavigationStackProp,
+  NavigationStackOptions,
+} from 'react-navigation-stack';
 
 type Props = {
-  navigation: NavigationStackProp<{announcementId: string}>;
+  navigation: NavigationStackProp<{announcementId: string; headline: string}>;
 };
 
 const AnnouncementView = ({navigation}: Props) => {
@@ -25,9 +28,11 @@ const AnnouncementView = ({navigation}: Props) => {
   );
 };
 
-AnnouncementView.navigationOptions = () => {
+AnnouncementView.navigationOptions = ({
+  navigation,
+}: any): NavigationStackOptions => {
   return {
-    title: 'Announcement',
+    title: navigation.getParam('headline', 'NO-ID'),
   };
 };
 

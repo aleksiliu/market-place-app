@@ -2,13 +2,7 @@ import React from 'react';
 import {Text, View, StyleSheet, TouchableOpacity} from 'react-native';
 
 import {NavigationInjectedProps, withNavigation} from 'react-navigation';
-
-type OwnProps = {
-  headline: string;
-  description: string;
-  price: number;
-  announcementId?: string;
-};
+import {Announcement} from '../types';
 
 const Card = ({
   headline,
@@ -16,11 +10,12 @@ const Card = ({
   price,
   navigation,
   announcementId,
-}: OwnProps & NavigationInjectedProps) => (
+}: Announcement & NavigationInjectedProps) => (
   <TouchableOpacity
     onPress={() =>
       navigation.navigate('Details', {
         announcementId,
+        headline,
       })
     }>
     <View style={styles.card}>
