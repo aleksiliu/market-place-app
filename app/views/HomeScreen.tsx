@@ -197,10 +197,17 @@ const HomeScreen: NavigationStackScreenComponent = () => {
                 </TouchableOpacity>
               )}
               <Button title="Upload image" onPress={imagePicker}></Button>
-              <Button
-                title="Add announcement"
-                color="#96CEA7"
-                onPress={onSubmit}></Button>
+              <View
+                style={{
+                  position: 'absolute',
+                  bottom: 32,
+                  zIndex: 1,
+                }}>
+                <Button
+                  title="Add announcement"
+                  color="#96CEA7"
+                  onPress={onSubmit}></Button>
+              </View>
             </View>
           </TouchableWithoutFeedback>
         </View>
