@@ -33,7 +33,7 @@ import Card from '../components/Card';
 
 import {NavigationStackScreenComponent} from 'react-navigation-stack';
 import {NavigationStackOptions} from 'react-navigation-stack';
-
+import ImagePicker from 'react-native-image-picker';
 const HomeScreen: NavigationStackScreenComponent = () => {
   const [announcements, setAnnouncements] = useState<Status<Announcement[]>>({
     status: 'loading',
@@ -45,6 +45,7 @@ const HomeScreen: NavigationStackScreenComponent = () => {
     headline: '',
     description: '',
     price: 0,
+    image: undefined,
   });
 
   useEffect(() => {
@@ -76,6 +77,27 @@ const HomeScreen: NavigationStackScreenComponent = () => {
     } else {
       Alert.alert('Fill all the details first!');
     }
+  };
+
+  const imagePicker = () => {
+    ImagePicker.showImagePicker(
+      {noData: true, mediaType: 'photo'},
+      response => {
+        console.log('Response = ', response);
+
+        if (response.didCancel) {
+          console.log('User cancelled image picker');
+        } else if (response.error) {
+          console.log('ImagePicker Error: ', response.error);
+        } else if (response.customButton) {
+          console.log('User tapped custom button: ', response.customButton);
+        } else {
+          const source = {uri: response.uri};
+
+          setForm({...form, image: source});
+        }
+      },
+    );
   };
 
   return (
@@ -140,6 +162,7 @@ const HomeScreen: NavigationStackScreenComponent = () => {
               />
             </TouchableOpacity>
           </View>
+
           <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
             <View
               style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
@@ -164,6 +187,16 @@ const HomeScreen: NavigationStackScreenComponent = () => {
                 onChangeText={text => setForm({...form, price: Number(text)})}
                 value={form.price.toString()}
               />
+              {form.image && (
+                <TouchableOpacity
+                  onPress={() => setForm({...form, image: undefined})}>
+                  <Image
+                    source={{uri: form.image.uri}}
+                    style={{height: 100, width: 100}}
+                  />
+                </TouchableOpacity>
+              )}
+              <Button title="Upload image" onPress={imagePicker}></Button>
               <Button
                 title="Add announcement"
                 color="#96CEA7"

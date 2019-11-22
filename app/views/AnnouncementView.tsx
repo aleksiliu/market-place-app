@@ -21,7 +21,7 @@ const AnnouncementView = ({navigation}: Props) => {
           backgroundColor: '#212325',
         }}>
         <Text style={{color: 'white'}}>
-          Announcement id: {navigation.getParam('announcementId', 'NO-ID')}
+          Announcement id: {navigation.getParam('announcementId')}
         </Text>
       </View>
     </>
@@ -32,7 +32,7 @@ AnnouncementView.navigationOptions = ({
   navigation,
 }: any): NavigationStackOptions => {
   return {
-    title: navigation.getParam('headline', 'NO-ID'),
+    title: navigation.getParam('headline'),
   };
 };
 
