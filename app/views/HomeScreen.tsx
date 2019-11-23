@@ -64,13 +64,11 @@ const HomeScreen: NavigationStackScreenComponent = () => {
       });
   };
 
-  const uploadImage = async (uri: string) => {
-    const response = await fetch(uri);
+  const uploadImage = async (data: any) => {
+    const response = await fetch(data.uri);
+
     const blob = await response.blob();
-
-    const fileName = uri.substring(uri.lastIndexOf('/') + 1);
-
-    console.log('heeheh', fileName);
+    const fileName = data.fileName.toLowerCase();
 
     await Storage.put(fileName, blob, {
       contentType: 'image/jpeg',
@@ -85,7 +83,7 @@ const HomeScreen: NavigationStackScreenComponent = () => {
       api
         .postAnnouncement(form)
         .then(response => {
-          uploadImage(form.image.uri);
+          uploadImage(form.image);
           fetchAnnouncements();
           setModalVisible(false);
         })
@@ -108,9 +106,7 @@ const HomeScreen: NavigationStackScreenComponent = () => {
         } else if (response.customButton) {
           console.log('User tapped custom button: ', response.customButton);
         } else {
-          const source = {uri: response.uri};
-
-          setForm({...form, image: source});
+          setForm({...form, image: response});
         }
       },
     );
