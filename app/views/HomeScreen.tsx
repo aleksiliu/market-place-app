@@ -34,6 +34,7 @@ import Card from '../components/Card';
 import {NavigationStackScreenComponent} from 'react-navigation-stack';
 import {NavigationStackOptions} from 'react-navigation-stack';
 import ImagePicker from 'react-native-image-picker';
+import {Storage} from 'aws-amplify';
 const HomeScreen: NavigationStackScreenComponent = () => {
   const [announcements, setAnnouncements] = useState<Status<Announcement[]>>({
     status: 'loading',
@@ -63,11 +64,25 @@ const HomeScreen: NavigationStackScreenComponent = () => {
       });
   };
 
+  const uploadImage = async (uri: string) => {
+    console.log('haha', uri);
+    const response = await fetch(uri);
+    const blob = await response.blob();
+    const fileName = 'flower.jpeg';
+    await Storage.put(fileName, blob, {
+      contentType: 'image/jpeg',
+      level: 'public',
+    })
+      .then(data => console.log(data))
+      .catch(err => console.log(err));
+  };
+
   const onSubmit = () => {
     if (form.headline && form.description && form.price) {
       api
         .postAnnouncement(form)
         .then(response => {
+          uploadImage(form.image.uri);
           fetchAnnouncements();
           setModalVisible(false);
         })
@@ -83,8 +98,6 @@ const HomeScreen: NavigationStackScreenComponent = () => {
     ImagePicker.showImagePicker(
       {noData: true, mediaType: 'photo'},
       response => {
-        console.log('Response = ', response);
-
         if (response.didCancel) {
           console.log('User cancelled image picker');
         } else if (response.error) {
