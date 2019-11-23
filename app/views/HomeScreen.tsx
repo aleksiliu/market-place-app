@@ -65,10 +65,13 @@ const HomeScreen: NavigationStackScreenComponent = () => {
   };
 
   const uploadImage = async (uri: string) => {
-    console.log('haha', uri);
     const response = await fetch(uri);
     const blob = await response.blob();
-    const fileName = 'flower.jpeg';
+
+    const fileName = uri.substring(uri.lastIndexOf('/') + 1);
+
+    console.log('heeheh', fileName);
+
     await Storage.put(fileName, blob, {
       contentType: 'image/jpeg',
       level: 'public',
