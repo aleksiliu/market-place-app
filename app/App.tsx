@@ -10,19 +10,27 @@
 
 import React from 'react';
 
-import {createAppContainer} from 'react-navigation';
+import {createAppContainer, createSwitchNavigator} from 'react-navigation';
 import {createStackNavigator} from 'react-navigation-stack';
 
 import HomeScreen from './views/HomeScreen';
 import AnnouncementView from './views/AnnouncementView';
+import SignupScreen from './views/SignupScreen';
+import LoginScreen from './views/LoginScreen';
 
-const AppNavigator = createStackNavigator(
+const AppNavigator = createSwitchNavigator(
   {
-    Home: HomeScreen,
-    Details: AnnouncementView,
+    loginFlow: createStackNavigator({
+      Login: LoginScreen,
+      Signup: SignupScreen,
+    }),
+    mainFlow: createStackNavigator({
+      Home: HomeScreen,
+      Details: AnnouncementView,
+    }),
   },
   {
-    initialRouteName: 'Home',
+    initialRouteName: 'loginFlow',
     defaultNavigationOptions: {
       headerStyle: {
         backgroundColor: '#212325',

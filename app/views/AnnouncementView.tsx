@@ -10,7 +10,7 @@ type Props = {
   navigation: NavigationStackProp<{announcementId: string; headline: string}>;
 };
 
-const AnnouncementView = ({navigation}: Props) => {
+const AnnouncementScreen = ({navigation}: Props) => {
   return (
     <>
       <View
@@ -28,7 +28,7 @@ const AnnouncementView = ({navigation}: Props) => {
   );
 };
 
-AnnouncementView.navigationOptions = ({
+AnnouncementScreen.navigationOptions = ({
   navigation,
 }: any): NavigationStackOptions => {
   return {
@@ -36,4 +36,4 @@ AnnouncementView.navigationOptions = ({
   };
 };
 
-export default AnnouncementView;
+export default AnnouncementScreen;
